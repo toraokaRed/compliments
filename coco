@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Комплименты</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #1a0033 0%, #000000 70%);
+            font-family: 'Arial Black', 'Impact', sans-serif;
+            cursor: pointer;
+        }
+
+        /* Пульсирующее свечение фона */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(255, 0, 100, 0.15) 0%, transparent 50%);
+            animation: bgPulse 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .text-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+            max-width: 95vw;
+        }
+
+        .text {
+            font-size: clamp(1.8rem, 9vw, 7rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #fff;
+            opacity: 0;
+            line-height: 1.1;
+            word-break: break-word;
+            will-change: transform, opacity, text-shadow;
+        }
+
+        /* Анимации появления */
+        .anim-popIn {
+            animation: popIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                       glowPulse 2s ease-in-out 1s infinite,
+                       floaty 3s ease-in-out 1s infinite;
+        }
+        .anim-slideUp {
+            animation: slideUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+                       glowPulse 2s ease-in-out 0.9s infinite,
+                       floaty 3.5s ease-in-out 0.9s infinite;
+        }
+        .anim-flipIn {
+            animation: flipIn 1s cubic-bezier(0.34, 1.4, 0.64, 1) forwards,
+                       glowPulse 2s ease-in-out 1s infinite,
+                       floaty 3s ease-in-out 1s infinite;
+        }
+        .anim-zoomBlur {
+            animation: zoomBlur 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+                       glowPulse 2s ease-in-out 0.9s infinite,
+                       floaty 2.8s ease-in-out 0.9s infinite;
+        }
+        .anim-dropIn {
+            animation: dropIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                       glowPulse 2s ease-in-out 1s infinite,
+                       floaty 3.2s ease-in-out 1s infinite;
+        }
+        .anim-rotateIn {
+            animation: rotateIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                       glowPulse 2s ease-in-out 1s infinite,
+                       floaty 3s ease-in-out 1s infinite;
+        }
+        .anim-bounceIn {
+            animation: bounceIn 1.1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                       glowPulse 2s ease-in-out 1.1s infinite,
+                       floaty 3s ease-in-out 1.1s infinite;
+        }
+        .anim-swingIn {
+            animation: swingIn 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+                       glowPulse 2s ease-in-out 1.1s infinite,
+                       floaty 3.4s ease-in-out 1.1s infinite;
+        }
+
+        @keyframes popIn {
+            0%   { opacity: 0; transform: scale(0.2) rotate(-15deg); }
+            60%  { opacity: 1; transform: scale(1.15) rotate(3deg); }
+            80%  { transform: scale(0.95) rotate(-2deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0); }
+        }
+        @keyframes slideUp {
+            0%   { opacity: 0; transform: translateY(120%) scale(0.6); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes flipIn {
+            0%   { opacity: 0; transform: perspective(800px) rotateX(90deg) scale(0.5); }
+            100% { opacity: 1; transform: perspective(800px) rotateX(0) scale(1); }
+        }
+        @keyframes zoomBlur {
+            0%   { opacity: 0; transform: scale(3); filter: blur(20px); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+        @keyframes dropIn {
+            0%   { opacity: 0; transform: translateY(-100vh) rotate(-25deg); }
+            70%  { opacity: 1; transform: translateY(10px) rotate(5deg); }
+            100% { opacity: 1; transform: translateY(0) rotate(0); }
+        }
+        @keyframes rotateIn {
+            0%   { opacity: 0; transform: rotate(-720deg) scale(0.1); }
+            100% { opacity: 1; transform: rotate(0) scale(1); }
+        }
+        @keyframes bounceIn {
+            0%   { opacity: 0; transform: scale(0.1) translateY(-200px); }
+            50%  { opacity: 1; transform: scale(1.2) translateY(0); }
+            70%  { transform: scale(0.9) translateY(-20px); }
+            85%  { transform: scale(1.05) translateY(0); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes swingIn {
+            0%   { opacity: 0; transform: rotate(-45deg) translateX(-100%) scale(0.5); transform-origin: top left; }
+            100% { opacity: 1; transform: rotate(0) translateX(0) scale(1); transform-origin: top left; }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 10px var(--c1), 0 0 20px var(--c1), 0 0 40px var(--c1), 0 0 80px var(--c1); }
+            50%      { text-shadow: 0 0 20px var(--c1), 0 0 40px var(--c1), 0 0 80px var(--c1), 0 0 160px var(--c1); }
+        }
+        @keyframes floaty {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50%      { transform: translateY(-15px) scale(1.03); }
+        }
+
+        /* Частицы */
+        .particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 2;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: rise linear infinite;
+            will-change: transform, opacity;
+        }
+        @keyframes rise {
+            0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+            10%  { opacity: 1; transform: translateY(90vh) scale(1); }
+            90%  { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        /* Конфетти */
+        .confetti-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 20;
+            overflow: hidden;
+        }
+        .confetti {
+            position: absolute;
+            top: -20px;
+            width: 10px;
+            height: 14px;
+            will-change: transform;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            0%   { transform: translateY(-20px) rotate(0) rotateY(0); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg) rotateY(1440deg); opacity: 0.9; }
+        }
+
+        /* Салют */
+        .firework {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 15;
+            will-change: transform, opacity;
+        }
+        .spark {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 15;
+            will-change: transform, opacity;
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="confetti-layer" id="confettiLayer"></div>
+    <div class="text-container">
+        <div class="text" id="text"></div>
+    </div>
+
+    <script>
+        // ============ КОМПЛИМЕНТЫ (40 штук) ============
+        const compliments = [
+            "руся иди нахуй",
+            "руся ты долбоёб",
+            "руся ты конченый",
+            "руся сдохни",
+            "руся ты уёбок",
+            "руся ты пидор",
+            "руся ты дебил",
+            "руся ты мразь",
+            "руся ты гандон",
+            "руся ты хуйло",
+            "руся ты чмо",
+            "руся ты козёл",
+            "руся ты мудак",
+            "руся ты отброс",
+            "руся ты гнида",
+            "руся ты ублюдок",
+            "руся ты кретин",
+            "руся ты идиот",
+            "руся ты тварь",
+            "руся ты вонючка",
+            "руся ты плесень",
+            "руся ты червяк",
+            "руся ты таракан",
+            "руся ты крыса",
+            "руся ты паразит",
+            "руся ты ничтожество",
+            "руся ты позор",
+            "руся ты тупорылый",
+            "руся ты пустоголовый",
+            "руся ты бесполезный",
+            "руся ты мерзкий",
+            "руся ты жалкий",
+            "руся ты мерзопакостный",
+            "руся ты дегенерат",
+            "руся ты олигофрен",
+            "руся ты придурок",
+            "руся ты обмудок",
+            "руся ты выблядок",
+            "руся иди нахуй ещё раз",
+            "руся ты хуже всех"
+        ];
+
+        // ============ АНИМАЦИИ ============
+        const animations = [
+            'anim-popIn', 'anim-slideUp', 'anim-flipIn', 'anim-zoomBlur',
+            'anim-dropIn', 'anim-rotateIn', 'anim-bounceIn', 'anim-swingIn'
+        ];
+
+        // ============ УТИЛИТЫ ============
+        const rand = (min, max) => Math.random() * (max - min) + min;
+        const randInt = (min, max) => Math.floor(rand(min, max + 1));
+        const pick = arr => arr[randInt(0, arr.length - 1)];
+
+        // Яркий насыщенный цвет
+        function randomBrightColor() {
+            const hue = randInt(0, 360);
+            const sat = randInt(85, 100);
+            const light = randInt(50, 65);
+            return `hsl(${hue}, ${sat}%, ${light}%)`;
+        }
+
+        // ============ ЧАСТИЦЫ ФОНА ============
+        (function initParticles() {
+            const container = document.getElementById('particles');
+            const count = 35;
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const size = rand(2, 6);
+                const color = randomBrightColor();
+                p.style.left = rand(0, 100) + '%';
+                p.style.width = p.style.height = size + 'px';
+                p.style.background = color;
+                p.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+                p.style.animationDuration = rand(4, 10) + 's';
+                p.style.animationDelay = rand(0, 8) + 's';
+                container.appendChild(p);
+            }
+        })();
+
+        // ============ КОНФЕТТИ ============
+        function spawnConfetti(count = 80) {
+            const layer = document.getElementById('confettiLayer');
+            for (let i = 0; i < count; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                const color = randomBrightColor();
+                const w = rand(6, 14);
+                const h = rand(8, 20);
+                c.style.left = rand(-5, 100) + '%';
+                c.style.width = w + 'px';
+                c.style.height = h + 'px';
+                c.style.background = color;
+                c.style.boxShadow = `0 0 8px ${color}`;
+                if (Math.random() > 0.5) c.style.borderRadius = '50%';
+                const duration = rand(2.5, 5);
+                c.style.animationDuration = duration + 's';
+                c.style.animationDelay = rand(0, 1.2) + 's';
+                layer.appendChild(c);
+                // Удаляем после завершения
+                setTimeout(() => c.remove(), (duration + 1.5) * 1000);
+            }
+        }
+
+        // ============ САЛЮТ ============
+        function spawnFirework(x, y, color) {
+            const sparkCount = randInt(25, 45);
+            const baseColor = color || randomBrightColor();
+            const hueBase = randInt(0, 360);
+
+            // Вспышка
+            const flash = document.createElement('div');
+            flash.className = 'firework';
+            flash.style.left = x + 'px';
+            flash.style.top = y + 'px';
+            const flashColor = randomBrightColor();
+            flash.style.background = flashColor;
+            flash.style.boxShadow = `0 0 20px ${flashColor}, 0 0 40px ${flashColor}, 0 0 80px ${flashColor}`;
+            flash.style.transform = 'translate(-50%, -50%) scale(3)';
+            flash.style.transition = 'transform 0.8s ease-out, opacity 0.8s ease-out';
+            document.body.appendChild(flash);
+            requestAnimationFrame(() => {
+                flash.style.transform = 'translate(-50%, -50%) scale(0)';
+                flash.style.opacity = '0';
+            });
+            setTimeout(() => flash.remove(), 900);
+
+            // Искры
+            for (let i = 0; i < sparkCount; i++) {
+                const s = document.createElement('div');
+                s.className = 'spark';
+                const angle = (Math.PI * 2 * i) / sparkCount + rand(-0.1, 0.1);
+                const distance = rand(80, 220);
+                const dx = Math.cos(angle) * distance;
+                const dy = Math.sin(angle) * distance;
+
+                const sparkColor = `hsl(${(hueBase + randInt(-30, 30) + 360) % 360}, 100%, ${randInt(55, 75)}%)`;
+                s.style.left = x + 'px';
+                s.style.top = y + 'px';
+                s.style.width = s.style.height = rand(3, 6) + 'px';
+                s.style.background = sparkColor;
+                s.style.boxShadow = `0 0 10px ${sparkColor}, 0 0 20px ${sparkColor}`;
+                s.style.transform = 'translate(-50%, -50%)';
+                s.style.transition = `transform ${rand(0.8, 1.4)}s cubic-bezier(0.1, 0.7, 0.3, 1), opacity 1.2s ease-out`;
+
+                document.body.appendChild(s);
+                requestAnimationFrame(() => {
+                    s.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.3)`;
+                    s.style.opacity = '0';
+                });
+                setTimeout(() => s.remove(), 1600);
+            }
+        }
+
+        function launchFireworks() {
+            const count = randInt(2, 4);
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const x = rand(window.innerWidth * 0.1, window.innerWidth * 0.9);
+                    const y = rand(window.innerHeight * 0.1, window.innerHeight * 0.6);
+                    spawnFirework(x, y);
+                }, i * rand(150, 400));
+            }
+        }
+
+        // ============ ПОКАЗ КОМПЛИМЕНТА ============
+        const textEl = document.getElementById('text');
+        let lastIndex = -1;
+        let busy = false;
+
+        function showRandomCompliment() {
+            if (busy) return;
+            busy = true;
+
+            // Выбираем случайный комплимент (не тот же, что был)
+            let idx;
+            do {
+                idx = randInt(0, compliments.length - 1);
+            } while (idx === lastIndex && compliments.length > 1);
+            lastIndex = idx;
+
+            const phrase = compliments[idx];
+            const anim = pick(animations);
+
+            // Случайные цвета: основной + дополнительный для свечения
+            const c1 = randomBrightColor();
+            const c2 = randomBrightColor();
+
+            // Сброс анимаций
+            textEl.className = 'text';
+            textEl.style.opacity = '0';
+            textEl.textContent = phrase;
+
+            // Градиентный текст
+            textEl.style.background = `linear-gradient(45deg, ${c1}, ${c2}, ${c1})`;
+            textEl.style.backgroundSize = '200% 200%';
+            textEl.style.webkitBackgroundClip = 'text';
+            textEl.style.backgroundClip = 'text';
+            textEl.style.color = 'transparent';
+            textEl.style.webkitTextFillColor = 'transparent';
+            // Свечение через переменную
+            textEl.style.setProperty('--c1', c1);
+
+            // Форсируем reflow
+            void textEl.offsetWidth;
+
+            // Ставим анимацию
+            textEl.classList.add(anim);
+
+            // Эффекты
+            spawnConfetti(randInt(60, 100));
+            launchFireworks();
+
+            // Периодические салюты во время показа
+            const fwInterval = setInterval(() => {
+                if (Math.random() > 0.4) launchFireworks();
+            }, 1200);
+
+            // Через 5 секунд — следующий
+            setTimeout(() => {
+                clearInterval(fwInterval);
+                busy = false;
+                showRandomCompliment();
+            }, 5000);
+        }
+
+        // Клик — мгновенно следующий
+        document.body.addEventListener('click', () => {
+            if (busy) {
+                busy = false;
+            }
+        });
+
+        // Поехали!
+        showRandomCompliment();
+    </script>
+</body>
+</html>
